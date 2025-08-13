@@ -40,6 +40,7 @@
   export default function Home() {
       const [activeTab, setActiveTab] = useState("tuketim");
     const [darkMode, setDarkMode] = useState(false);
+const [savedSettings, setSavedSettings] = useState({ unitPrice: 0, fixedFee: 0 });
 
         const [lang, setLang] = useState("tr");
     const t = translations[lang];
@@ -67,10 +68,17 @@
 
     const onSubmit = (data) => {
       localStorage.setItem("settings", JSON.stringify(data));
+      setSavedSettings(data);
       toast.success(t.success);
     };
     const dailyTotal = Hourly.reduce((sum, item) => sum + parseFloat(item.kwh), 0);
-  const savedSettings = JSON.parse(localStorage.getItem("settings")) || { unitPrice: 0, fixedFee: 0 };
+    useEffect(() => {
+  const settings = localStorage.getItem("settings");
+  if (settings) {
+    setSavedSettings(JSON.parse(settings));
+  }
+}, []);
+  // const savedSettings = JSON.parse(localStorage.getItem("settings")) || { unitPrice: 0, fixedFee: 0 };
 
     return (
           <div className="h-screen flex flex-col ">
